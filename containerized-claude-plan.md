@@ -50,11 +50,12 @@ This means even with `bypassPermissions`, Claude can't:
 
 ### 3. Repos — volumes vs clones
 
-**Option A: Mount as volumes** (recommended for personal use)
+**Option A: Mount as volumes** (chosen)
 
-- Changes persist on host
-- Real-time sync — you see Claude's work immediately
-- Risk: Claude could mess up your working tree (but you have git reflog)
+- Real-time sync — Claude sees your latest local changes
+- The `--worktree` flag provides isolation: Claude's writes go to a separate worktree, your working tree stays untouched
+- No clone overhead — instant startup
+- Changes reach host via PR (worktree pushes branches)
 
 **Option B: Clone fresh at container start**
 
@@ -62,6 +63,8 @@ This means even with `bypassPermissions`, Claude can't:
 - Claude pushes branches, you review PRs
 - Slower startup (clone time)
 - Better for "fire and forget" autonomous tasks
+
+**Decision:** Option A chosen with `--worktree` isolation. Repos are mounted from host via volume mount. Claude can see your latest local changes but writes go to a separate worktree, keeping your working tree untouched. Changes reach the host via PR.
 
 ### 4. What goes in the container
 
