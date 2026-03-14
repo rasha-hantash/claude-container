@@ -1,0 +1,22 @@
+services:
+  claude:
+    build: .
+    env_file: .env
+    volumes:
+      # Mount repos — changes persist on host
+      - ~/workspace/personal/explorations:/workspace
+      # Persist Claude session state between runs
+      - claude-state:/root/.claude/projects
+      # Share cove event files with host sidebar
+      - /tmp/cove-events:/tmp/cove-events
+    stdin_open: true
+    tty: true
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 8g
+          cpus: "4"
+
+volumes:
+  claude-state:
