@@ -4,10 +4,10 @@ Run Claude Code autonomously inside a Docker container. The container is the san
 
 ## Quick start
 
-```bash
+```
 # 1. Create .env from template
 cp .env.template .env
-# Fill in: ANTHROPIC_API_KEY, GITHUB_TOKEN, GT_AUTH_TOKEN, GIT_USER_NAME, GIT_USER_EMAIL
+# Fill in: ANTHROPIC_API_KEY, GITHUB_TOKEN, GT_AUTH_TOKEN, GIT_USER_NAME, GIT_USER_EMAIL, REPOS
 
 # 2. Build
 docker compose build
@@ -22,9 +22,10 @@ docker compose run --rm claude claude -p "Fix the typo in README.md" --max-turns
 ## How it works
 
 - **Container = sandbox**: `--dangerously-skip-permissions` is safe because the container boundary prevents host damage
-- **Repos mounted from host**: Changes persist via volume mount at `/workspace/`
+- **No network firewall**: Full outbound network access — WebFetch, npm install, cargo build, pip install, go get all work without restriction
+- **Repos mounted from host via volume mount**: Claude uses `--worktree` flag to isolate changes — your working tree stays untouched
 - **Credentials scoped**: Fine-grained GitHub PAT + Graphite token injected at runtime
-- **Safety**: Use GitHub branch protection to prevent direct pushes to main (requires GitHub Pro)
+- **Safety model**: Container isolation + scoped credentials + GitHub branch protection. The container can't touch the host, tokens are least-privilege, and branch protection prevents direct pushes to main
 
 ## Files
 

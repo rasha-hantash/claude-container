@@ -23,7 +23,7 @@ else
     echo "⚠ GT_AUTH_TOKEN not set — gt submit will fail"
 fi
 
-# ── Initialize Graphite in mounted repos ──
+# ── Initialize Graphite in repos ──
 for repo in /workspace/*/; do
     if [ -d "$repo/.git" ] && [ ! -f "$repo/.git/.graphite_repo_config" ]; then
         (cd "$repo" && gt init --trunk main 2>/dev/null) || true
