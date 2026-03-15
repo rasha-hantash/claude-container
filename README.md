@@ -4,20 +4,10 @@ Run Claude Code autonomously inside a Docker container. The container is the san
 
 ## Quick start
 
-```
-# 1. Create .env from template
-cp .env.template .env
-# Fill in: ANTHROPIC_API_KEY, GITHUB_TOKEN, GT_AUTH_TOKEN, GIT_USER_NAME, GIT_USER_EMAIL, REPOS
-
-# 2. Build
-docker compose build
-
-# 3. Run interactive session
-docker compose run --rm claude
-
-# 4. Run a one-shot task
-docker compose run --rm claude claude -p "Fix the typo in README.md" --max-turns 5
-```
+1. Create .env from template: `cp .env.template .env` (fill in GITHUB_TOKEN, GT_AUTH_TOKEN)
+2. Build: `docker compose build`
+3. Run: `./scripts/run.sh` (auto-extracts Claude credentials from macOS keychain)
+4. One-shot task: `./scripts/run.sh claude -p "Fix the typo in README.md" --max-turns 5`
 
 ## How it works
 
@@ -34,6 +24,7 @@ docker compose run --rm claude claude -p "Fix the typo in README.md" --max-turns
 | `Dockerfile`                  | Full toolchain: Node, Rust, Go, Python, gh, gt, Claude Code |
 | `docker-compose.yml`          | Volume mounts, env vars, resource limits                    |
 | `entrypoint.sh`               | Configures git, gh, gt auth from env vars                   |
+| `scripts/run.sh`              | Extracts Claude credentials from host keychain and launches |
 | `claude-config/settings.json` | Bypass permissions (container is the sandbox)               |
 | `claude-config/CLAUDE.md`     | Autonomous mode instructions                                |
 | `.env.template`               | Template for secrets                                        |
