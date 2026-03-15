@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# ── Claude credentials (from host keychain) ──
+if [ -n "${CLAUDE_CREDENTIALS:-}" ]; then
+    mkdir -p /root/.claude
+    echo "$CLAUDE_CREDENTIALS" > /root/.claude/.credentials.json
+    echo "✓ Claude credentials loaded from host"
+else
+    echo "⚠ CLAUDE_CREDENTIALS not set — run: claude auth login"
+fi
+
 # ── Git identity ──
 git config --global user.name "${GIT_USER_NAME:-Claude Container}"
 git config --global user.email "${GIT_USER_EMAIL:-claude@container.local}"
