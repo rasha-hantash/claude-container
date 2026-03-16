@@ -34,6 +34,10 @@ WORKDIR /workspace
 
 COPY claude-config/ /root/.claude/
 
+# Cove hook shim (lightweight replacement for cove binary)
+COPY cove-shim.sh /usr/local/bin/cove
+RUN chmod +x /usr/local/bin/cove
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 

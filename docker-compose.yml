@@ -4,15 +4,24 @@ services:
     env_file: .env
     environment:
       - CLAUDE_CREDENTIALS=${CLAUDE_CREDENTIALS:-}
+      - TMUX_PANE=${TMUX_PANE:-}
+      - BRAIN_OS_PATH=/workspace/brain-os
     volumes:
       # Mount repos from host — Claude uses --worktree for isolation
       - ~/workspace/personal/explorations:/workspace
       # Persist Claude session state between runs
       - claude-state:/root/.claude/projects
-      # Share cove event files with host sidebar
-      - /tmp/cove-events:/tmp/cove-events
       # Mount entrypoint so edits take effect without rebuild
       - ./entrypoint.sh:/entrypoint.sh:ro
+      # Full Claude ecosystem
+      - ~/.claude/hooks:/root/.claude/hooks:ro
+      - ~/.claude/agents:/root/.claude/agents:ro
+      - ~/.claude/skills:/root/.claude/skills:ro
+      - ~/.claude/commands:/root/.claude/commands:ro
+      - ~/.claude/CLAUDE.md:/root/.claude/CLAUDE.md:ro
+      - ~/.claude/settings.json:/root/.claude-host/settings.json:ro
+      # Cove event sharing (sidebar reads these on host)
+      - ~/.local/state/cove/events:/root/.local/state/cove/events
     stdin_open: true
     tty: true
     deploy:
