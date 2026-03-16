@@ -10,6 +10,8 @@ export CLAUDE_CREDENTIALS=$(security find-generic-password -s "Claude Code-crede
 if [ -z "$CLAUDE_CREDENTIALS" ]; then
     echo "⚠ Could not extract Claude credentials from keychain"
     echo "  You'll need to run 'claude auth login' inside the container"
+else
+    echo "  Claude credentials: ${#CLAUDE_CREDENTIALS} bytes extracted from keychain"
 fi
 
 exec docker compose run --rm claude "$@"

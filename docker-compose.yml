@@ -2,6 +2,8 @@ services:
   claude:
     build: .
     env_file: .env
+    environment:
+      - CLAUDE_CREDENTIALS=${CLAUDE_CREDENTIALS:-}
     volumes:
       # Mount repos from host — Claude uses --worktree for isolation
       - ~/workspace/personal/explorations:/workspace
@@ -9,6 +11,8 @@ services:
       - claude-state:/root/.claude/projects
       # Share cove event files with host sidebar
       - /tmp/cove-events:/tmp/cove-events
+      # Mount entrypoint so edits take effect without rebuild
+      - ./entrypoint.sh:/entrypoint.sh:ro
     stdin_open: true
     tty: true
     deploy:
