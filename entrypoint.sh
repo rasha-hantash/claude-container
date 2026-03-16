@@ -5,7 +5,7 @@ set -euo pipefail
 if [ -n "${CLAUDE_CREDENTIALS:-}" ]; then
     mkdir -p /root/.claude
     echo "$CLAUDE_CREDENTIALS" > /root/.claude/.credentials.json
-    echo "✓ Claude credentials loaded from host"
+    echo "✓ Claude credentials loaded (${#CLAUDE_CREDENTIALS} bytes)"
 else
     echo "⚠ CLAUDE_CREDENTIALS not set — run: claude auth login"
 fi
@@ -15,10 +15,12 @@ git config --global user.name "${GIT_USER_NAME:-Claude Container}"
 git config --global user.email "${GIT_USER_EMAIL:-claude@container.local}"
 
 # ── GitHub CLI auth ──
+# gh auto-detects GITHUB_TOKEN from env — no need for `gh auth login`.
+# Just validate the token works.
 if [ -n "${GITHUB_TOKEN:-}" ]; then
-    echo "$GITHUB_TOKEN" | gh auth login --with-token 2>/dev/null && \
-        echo "✓ GitHub CLI authenticated" || \
-        echo "⚠ GitHub CLI auth failed (token may be invalid)"
+    gh_user=$(gh api user --jq .login 2>&1) && \
+        echo "✓ GitHub CLI authenticated as $gh_user" || \
+        echo "⚠ GITHUB_TOKEN invalid: $gh_user"
 else
     echo "⚠ GITHUB_TOKEN not set — gh commands will fail"
 fi
