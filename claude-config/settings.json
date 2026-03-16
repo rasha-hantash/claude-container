@@ -1,7 +1,7 @@
 {
   "permissions": {
     "allow": [],
-    "deny": []
+    "deny": ["Bash(gt merge*)", "Bash(gh pr merge*)"]
   },
   "defaultMode": "bypassPermissions"
 }
