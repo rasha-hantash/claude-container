@@ -26,9 +26,13 @@ RUN set -eux; curl -LsSf https://astral.sh/uv/install.sh | UV_INSTALL_DIR=/usr/l
 RUN ln -sf /usr/bin/fdfind /usr/bin/fd
 
 # Install Claude Code via native installer (npm is deprecated)
-# Installs to /root/.local/bin/claude, then copy to /usr/local/bin for node user access
+# Install as root first, then copy binary + version data to node user's paths
+# so Claude sees a valid native install and auto-updates work.
 RUN curl -fsSL https://claude.ai/install.sh | bash -s ${CLAUDE_CODE_VERSION} \
-    && cp /root/.local/bin/claude /usr/local/bin/claude
+    && mkdir -p /home/node/.local/bin /home/node/.local/share \
+    && cp /root/.local/bin/claude /home/node/.local/bin/claude \
+    && cp -r /root/.local/share/claude /home/node/.local/share/claude \
+    && chown -R node:node /home/node/.local
 RUN npm install -g @withgraphite/graphite-cli
 
 ENV DEVCONTAINER=true
