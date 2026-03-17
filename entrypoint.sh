@@ -71,6 +71,13 @@ for rule in ['Bash(gt merge*)', 'Bash(gh pr merge*)']:
 with open('/root/.claude/settings.json', 'w') as f:
     json.dump(cfg, f, indent=2)
 " 2>/dev/null && echo "✓ Settings merged from host" || echo "⚠ Failed to merge settings.json"
+
+    # Lock settings.json so Claude cannot modify deny rules mid-session.
+    # chattr +i sets the Linux immutable flag — even root cannot write to
+    # the file without first running chattr -i (which requires knowing to do so).
+    chattr +i /root/.claude/settings.json 2>/dev/null && \
+        echo "✓ settings.json locked (immutable)" || \
+        echo "⚠ Could not lock settings.json — chattr not available"
 else
     echo "ℹ No host settings.json mounted — using container defaults"
 fi
