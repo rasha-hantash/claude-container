@@ -17,24 +17,20 @@ services:
       # Writable scratch space for cloned repos
       - workspace-scratch:/scratch
       # Persist Claude session state between runs
-      - claude-state:/root/.claude/projects
+      - claude-state:/home/node/.claude/projects
       # Share cove event files with host sidebar
       - /tmp/cove-events:/tmp/cove-events
       # Mount entrypoint so edits take effect without rebuild
       - ./entrypoint.sh:/entrypoint.sh:ro
-      # Full Claude ecosystem
-      - ~/.claude/hooks:/root/.claude/hooks:ro
-      - ~/.claude/agents:/root/.claude/agents:ro
-      - ~/.claude/skills:/root/.claude/skills:ro
-      - ~/.claude/commands:/root/.claude/commands:ro
-      - ~/.claude/CLAUDE.md:/root/.claude/CLAUDE.md:ro
-      - ~/.claude/settings.json:/root/.claude-host/settings.json:ro
+      # Full Claude ecosystem (read-only from host)
+      - ~/.claude/hooks:/home/node/.claude/hooks:ro
+      - ~/.claude/agents:/home/node/.claude/agents:ro
+      - ~/.claude/skills:/home/node/.claude/skills:ro
+      - ~/.claude/commands:/home/node/.claude/commands:ro
+      - ~/.claude/CLAUDE.md:/home/node/.claude/CLAUDE.md:ro
+      - ~/.claude/settings.json:/home/node/.claude-host/settings.json:ro
       # Cove event sharing (sidebar reads these on host)
-      - ~/.local/state/cove/events:/root/.local/state/cove/events
-    cap_add:
-      # Required for chattr +i to lock settings.json as immutable.
-      # Prevents Claude from modifying its own deny rules mid-session.
-      - LINUX_IMMUTABLE
+      - ~/.local/state/cove/events:/home/node/.local/state/cove/events
     stdin_open: true
     tty: true
     deploy:
