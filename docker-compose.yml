@@ -1,16 +1,25 @@
 services:
   claude:
     build: .
-    env_file: .env
     environment:
       - CLAUDE_CREDENTIALS=${CLAUDE_CREDENTIALS:-}
       - TMUX_PANE=${TMUX_PANE:-}
       - BRAIN_OS_PATH=/workspace/brain-os
+      - GIT_USER_NAME=${GIT_USER_NAME:-Claude Container}
+      - GIT_USER_EMAIL=${GIT_USER_EMAIL:-claude@container.local}
+      - TARGET_REPO=${TARGET_REPO:-}
+    secrets:
+      - github_token
+      - gt_auth_token
     volumes:
-      # Mount repos from host — Claude uses --worktree for isolation
-      - ~/workspace/personal/explorations:/workspace
+      # Mount repos read-only — Claude clones into /scratch for writes
+      - ~/workspace/personal/explorations:/workspace:ro
+      # Writable scratch space for cloned repos
+      - workspace-scratch:/scratch
       # Persist Claude session state between runs
       - claude-state:/root/.claude/projects
+      # Share cove event files with host sidebar
+      - /tmp/cove-events:/tmp/cove-events
       # Mount entrypoint so edits take effect without rebuild
       - ./entrypoint.sh:/entrypoint.sh:ro
       # Full Claude ecosystem
@@ -30,5 +39,12 @@ services:
           memory: 8g
           cpus: "4"
 
+secrets:
+  github_token:
+    environment: GITHUB_TOKEN
+  gt_auth_token:
+    environment: GT_AUTH_TOKEN
+
 volumes:
   claude-state:
+  workspace-scratch:

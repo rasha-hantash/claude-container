@@ -28,7 +28,7 @@ RUN npm install -g @withgraphite/graphite-cli
 
 ENV DEVCONTAINER=true
 
-RUN mkdir -p /workspace /root/.claude /root/.config/graphite
+RUN mkdir -p /workspace /scratch /root/.claude /root/.config/graphite
 
 WORKDIR /workspace
 
