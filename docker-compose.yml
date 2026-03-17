@@ -29,6 +29,8 @@ services:
       - ~/.claude/commands:/home/node/.claude/commands:ro
       - ~/.claude/CLAUDE.md:/home/node/.claude/CLAUDE.md:ro
       - ~/.claude/settings.json:/home/node/.claude-host/settings.json:ro
+      # Persist Claude UI state (theme, onboarding) across container runs
+      - ~/.claude.json:/home/node/.claude.json
       # Cove event sharing (sidebar reads these on host)
       - ~/.local/state/cove/events:/home/node/.local/state/cove/events
     stdin_open: true
