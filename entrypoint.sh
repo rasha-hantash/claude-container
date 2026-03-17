@@ -93,6 +93,10 @@ else
     echo "ℹ No host settings.json mounted — using container defaults"
 fi
 
+# ── Ensure /scratch is writable by node ──
+# Named volumes are created as root; fix ownership on first run.
+chown node:node /scratch
+
 # ── On-demand repo clone into /scratch ──
 if [ -n "${TARGET_REPO:-}" ]; then
     repo_name=$(basename "$TARGET_REPO")
