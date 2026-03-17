@@ -31,6 +31,10 @@ services:
       - ~/.claude/settings.json:/root/.claude-host/settings.json:ro
       # Cove event sharing (sidebar reads these on host)
       - ~/.local/state/cove/events:/root/.local/state/cove/events
+    cap_add:
+      # Required for chattr +i to lock settings.json as immutable.
+      # Prevents Claude from modifying its own deny rules mid-session.
+      - LINUX_IMMUTABLE
     stdin_open: true
     tty: true
     deploy:
