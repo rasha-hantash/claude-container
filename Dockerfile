@@ -25,7 +25,10 @@ RUN set -eux; curl -LsSf https://astral.sh/uv/install.sh | UV_INSTALL_DIR=/usr/l
 
 RUN ln -sf /usr/bin/fdfind /usr/bin/fd
 
-RUN npm install -g @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}
+# Install Claude Code via native installer (npm is deprecated)
+# Installs to /root/.local/bin/claude, then copy to /usr/local/bin for node user access
+RUN curl -fsSL https://claude.ai/install.sh | bash -s ${CLAUDE_CODE_VERSION} \
+    && cp /root/.local/bin/claude /usr/local/bin/claude
 RUN npm install -g @withgraphite/graphite-cli
 
 ENV DEVCONTAINER=true
