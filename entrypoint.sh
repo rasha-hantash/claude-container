@@ -93,6 +93,25 @@ else
     echo "ℹ No host settings.json mounted — using container defaults"
 fi
 
+# ── Build CLAUDE.md from host + container addendum ──
+# Host CLAUDE.md is mounted read-only at .claude-host/. Merge it with
+# container-specific overrides and write to the real .claude/ location.
+HOST_CLAUDE="$NODE_HOME/.claude-host/CLAUDE.md"
+ADDENDUM="/claude-config/container-addendum.md"
+TARGET_CLAUDE="$NODE_HOME/.claude/CLAUDE.md"
+if [ -f "$HOST_CLAUDE" ]; then
+    cat "$HOST_CLAUDE" > "$TARGET_CLAUDE"
+    if [ -f "$ADDENDUM" ]; then
+        printf "\n\n" >> "$TARGET_CLAUDE"
+        cat "$ADDENDUM" >> "$TARGET_CLAUDE"
+    fi
+    chown root:node "$TARGET_CLAUDE"
+    chmod 444 "$TARGET_CLAUDE"
+    echo "✓ CLAUDE.md merged with container addendum (locked)"
+else
+    echo "ℹ No host CLAUDE.md mounted"
+fi
+
 # ── Ensure volumes are writable by node ──
 # Named volumes are created as root; fix ownership on first run.
 chown node:node /scratch
