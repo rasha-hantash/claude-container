@@ -29,7 +29,9 @@ services:
       - ~/.claude/agents:/home/node/.claude/agents:ro
       - ~/.claude/skills:/home/node/.claude/skills:ro
       - ~/.claude/commands:/home/node/.claude/commands:ro
-      - ~/.claude/CLAUDE.md:/home/node/.claude/CLAUDE.md:ro
+      - ~/.claude/CLAUDE.md:/home/node/.claude-host/CLAUDE.md:ro
+      # Container-specific CLAUDE.md overrides (appended at startup by entrypoint)
+      - ./claude-config/container-addendum.md:/claude-config/container-addendum.md:ro
       - ~/.claude/settings.json:/home/node/.claude-host/settings.json:ro
       # Persist Claude UI state (theme, onboarding) across container runs
       - ~/.claude.json:/home/node/.claude.json

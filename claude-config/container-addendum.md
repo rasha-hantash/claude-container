@@ -21,6 +21,17 @@ git remote set-url origin "$(git -C /workspace/<repo-name> remote get-url origin
 gt init --trunk main
 ```
 
+### Dotfiles and system configs (overrides dotfiles section above)
+
+You **cannot** edit dotfiles, hooks, CLAUDE.md, settings.json, or any system-level config. These are mounted read-only from the host. Do NOT attempt to modify files under `~/.claude/hooks/`, `~/.claude/agents/`, `~/.claude/skills/`, or `~/.claude/CLAUDE.md`.
+
+If you identify a change that should be made to dotfiles or Claude config:
+
+1. **Create a GitHub issue** on `rasha-hantash/dotfiles` describing the change and why.
+2. Move on with your current task — the host user will make the change in a host session where the symlink chain works.
+
+Do NOT clone the dotfiles repo into `/scratch` to make changes — dotfiles are symlinked on the host and changes must propagate through those symlinks.
+
 ### Credentials
 
 - GitHub token: loaded from Docker secret at `/run/secrets/github_token` (exported as `GITHUB_TOKEN`)
