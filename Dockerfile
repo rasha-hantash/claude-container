@@ -33,7 +33,7 @@ RUN curl -fsSL https://claude.ai/install.sh | bash -s ${CLAUDE_CODE_VERSION} \
     && cp /root/.local/bin/claude /home/node/.local/bin/claude \
     && cp -r /root/.local/share/claude /home/node/.local/share/claude \
     && chown -R node:node /home/node/.local
-RUN npm install -g @withgraphite/graphite-cli
+RUN npm install -g @withgraphite/graphite-cli @debugmcp/mcp-debugger
 
 ENV DEVCONTAINER=true
 
