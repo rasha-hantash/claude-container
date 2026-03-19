@@ -246,7 +246,15 @@ Cove detects session state (Working/Idle/Asking) via hook scripts that write eve
 - [x] Create entrypoint.sh with auth setup (2026-03-14)
 - [x] Create docker-compose.yml with volume mounts (2026-03-14)
 - [x] Create .env.template (2026-03-14)
-- [ ] Test: create .env with real credentials, run `docker compose run --rm claude`
+- [x] Credential extraction — pass CLAUDE_CREDENTIALS to container (PR #3, 2026-03-14)
+- [x] Deny gt merge and gh pr merge in container permissions (PR #4, 2026-03-14)
+- [x] Full ecosystem parity — hooks, cove shim, settings merge (PR #5, 2026-03-14)
+- [x] Docker secrets + read-only mount with scratch clone (PR #6, 2026-03-14)
+- [x] Lock settings.json as immutable to prevent self-modification (PR #8, 2026-03-14)
+- [x] Run Claude as non-root user (node) for privilege separation (PR #9, 2026-03-15)
+- [x] Persist Claude UI state and fix /scratch ownership (PR #10, 2026-03-15)
+- [x] Switch from npm to native Claude Code installer (PR #11, 2026-03-15)
+- [x] Fix Claude Code binary install to node user's ~/.local paths (PR #12, 2026-03-15)
 - [ ] Test: autonomous task — have Claude create a branch, make a change, push a PR
 - [ ] Set up GitHub branch protection rules (requires Pro upgrade)
 - [ ] Cove integration: add `--container` flag and Docker launch path
