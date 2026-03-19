@@ -14,6 +14,8 @@ services:
     volumes:
       # Mount repos read-only — Claude clones into /scratch for writes
       - ~/workspace/personal/explorations:/workspace:ro
+      # Master plan writable (overrides the :ro parent mount)
+      - ~/workspace/personal/explorations/master-plan:/workspace/master-plan
       # Writable scratch space for cloned repos
       - workspace-scratch:/scratch
       # Persist Claude session state between runs
