@@ -93,6 +93,36 @@ else
     echo "ℹ No host settings.json mounted — using container defaults"
 fi
 
+# ── Merge mcp.json from host (path remapping for container) ──
+HOST_MCP="$NODE_HOME/.claude-host/mcp.json"
+TARGET_MCP="$NODE_HOME/.claude/mcp.json"
+if [ -f "$HOST_MCP" ]; then
+    sed \
+        -e 's|/Users/rashasaadeh/workspace/personal/explorations|/workspace|g' \
+        -e "s|/Users/rashasaadeh/.claude|$NODE_HOME/.claude|g" \
+        "$HOST_MCP" > "$TARGET_MCP"
+    chown node:node "$TARGET_MCP"
+    echo "✓ mcp.json merged from host"
+else
+    echo "ℹ No host mcp.json mounted — MCP servers unavailable"
+fi
+
+# ── Build mcp-dap-server from source (if available) ──
+DAP_SRC="/workspace/debugger/mcp-dap-server"
+DAP_BIN="/usr/local/bin/mcp-dap-server"
+if [ -d "$DAP_SRC" ] && [ ! -f "$DAP_BIN" ]; then
+    echo "  Building mcp-dap-server from source..."
+    (cd "$DAP_SRC" && GOMODCACHE=/tmp/gomodcache go build -mod=readonly -o "$DAP_BIN" .) 2>&1
+    if [ -f "$DAP_BIN" ]; then
+        chmod +x "$DAP_BIN"
+        echo "✓ mcp-dap-server built and installed"
+    else
+        echo "⚠ mcp-dap-server build failed"
+    fi
+elif [ -f "$DAP_BIN" ]; then
+    echo "✓ mcp-dap-server already installed"
+fi
+
 # ── Build CLAUDE.md from host + container addendum ──
 # Host CLAUDE.md is mounted read-only at .claude-host/. Merge it with
 # container-specific overrides and write to the real .claude/ location.

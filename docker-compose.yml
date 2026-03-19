@@ -33,6 +33,7 @@ services:
       # Container-specific CLAUDE.md overrides (appended at startup by entrypoint)
       - ./claude-config/container-addendum.md:/claude-config/container-addendum.md:ro
       - ~/.claude/settings.json:/home/node/.claude-host/settings.json:ro
+      - ~/.claude/mcp.json:/home/node/.claude-host/mcp.json:ro
       # Persist Claude UI state (theme, onboarding) across container runs
       - ~/.claude.json:/home/node/.claude.json
       # Cove event sharing (sidebar reads these on host)
