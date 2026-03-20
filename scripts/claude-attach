@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# claude-attach — Start a Claude Code session on the VPS (ephemeral container)
+#
+# Install on VPS host: sudo cp scripts/claude-attach /usr/local/bin/claude-attach
+#
+# Usage from any device:
+#   ssh <vps-tailscale-ip> claude-attach                    # interactive Claude session
+#   ssh <vps-tailscale-ip> claude-attach --repo myproject   # with target repo
+#   ssh <vps-tailscale-ip> claude-attach --rc               # with Remote Control (phone access)
+#
+# This mirrors the local scripts/run.sh pattern: spin up a container, run Claude, remove on exit.
+
+COMPOSE_FILE="/opt/claude/docker-compose.vps.yml"
+PROJECT_DIR="/opt/claude"
+
+cd "$PROJECT_DIR"
+exec docker compose -f "$COMPOSE_FILE" run --rm claude "$@"
