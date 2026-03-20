@@ -33,9 +33,14 @@ RUN curl -fsSL https://claude.ai/install.sh | bash -s ${CLAUDE_CODE_VERSION} \
     && cp /root/.local/bin/claude /home/node/.local/bin/claude \
     && cp -r /root/.local/share/claude /home/node/.local/share/claude \
     && chown -R node:node /home/node/.local
-RUN npm install -g @withgraphite/graphite-cli @debugmcp/mcp-debugger
+RUN npm install -g @withgraphite/graphite-cli @debugmcp/mcp-debugger mcp-js-debugger
+
+# Pre-install MCP servers so first VPS run is fast
+RUN uv tool install arxiv-mcp-server
 
 ENV DEVCONTAINER=true
+# DEPLOYMENT: "local" (Mac, default) or "vps" (headless VPS)
+ENV DEPLOYMENT=local
 
 # Create directories as root, then hand ownership to node user (uid 1000).
 # This follows Anthropic's reference devcontainer pattern: install as root, run as node.
