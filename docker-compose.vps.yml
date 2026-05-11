@@ -1,0 +1,41 @@
+services:
+  claude:
+    build: .
+    env_file: .env
+    environment:
+      - DEPLOYMENT=vps
+      - BRAIN_OS_PATH=/workspace/brain-os
+      - GIT_USER_NAME=${GIT_USER_NAME}
+      - GIT_USER_EMAIL=${GIT_USER_EMAIL}
+      - REPOS=${REPOS:-brain-os,dotfiles,debugger,cove,technical-rag,dork,claude-container,master-plan,mcp_excalidraw,nugget,k-os,ai-augmented-cs-curriculum}
+      - GITHUB_ORG=${GITHUB_ORG:-rasha-hantash}
+      - TARGET_REPO=${TARGET_REPO:-}
+    secrets:
+      - github_token
+      - gt_auth_token
+    volumes:
+      # Persistent volumes (NOT host bind mounts — repos cloned from GitHub)
+      - workspace:/workspace
+      - scratch:/scratch
+      - claude-state:/home/node/.claude/projects
+      # Persist .claude.json (alphaxiv OAuth, theme, onboarding)
+      - claude-json:/home/node/.claude-json-persist
+    stdin_open: true
+    tty: true
+    deploy:
+      resources:
+        limits:
+          memory: 6g
+          cpus: "4"
+
+secrets:
+  github_token:
+    environment: GITHUB_TOKEN
+  gt_auth_token:
+    environment: GT_AUTH_TOKEN
+
+volumes:
+  workspace:
+  scratch:
+  claude-state:
+  claude-json:
